@@ -27,7 +27,7 @@ const AppStackScreens = () => {
             headerTintColor: Colors.white,
             headerTitleStyle: { fontSize: 24, fontWeight: "bold" },
             title: "Team Stats",
-            animationEnabled: true,
+            Enabled: true,
           }}
         />
 
@@ -58,10 +58,7 @@ const AppStackScreens = () => {
   };
   const [user] = useContext(UserContext);
   return (
-    <RootStack.Navigator
-      screenOptions={{ animationEnabled: false }}
-      headerMode="none"
-    >
+    <RootStack.Navigator screenOptions={{ Enabled: true }} headerMode="none">
       {user.isLoggedIn === null ? (
         <RootStack.Screen name="Loading" component={LoadingScreen} />
       ) : user.isLoggedIn ? (
