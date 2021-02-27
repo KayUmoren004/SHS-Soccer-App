@@ -1,6 +1,5 @@
 import React, { useState, useContext } from "react";
 import { StyleSheet, TouchableOpacity, Text, View } from "react-native";
-import * as Yup from "yup";
 import * as Permissions from "expo-permissions";
 import * as ImagePicker from "expo-image-picker";
 import styled from "styled-components";
@@ -15,37 +14,8 @@ import { FirebaseContext } from "../../Components/Context/FirebaseContext";
 
 //dependencies
 import Colors from "../../Components/Utils/Colors";
-import Form from "../../Components/Screen Components/Forms/Form";
-import FormField from "../../Components/Screen Components/Forms/FormField";
-import FormButton from "../../Components/Screen Components/Forms/FormButton";
-import FormErrorMessage from "../../Components/Screen Components/Forms/FormErrorMessage";
-import IconButton from "../../Components/Screen Components/IconButton";
-import Footer from "../../Components/Screen Components/Footer";
-
-//Validate Name, Email, and Password
-const validationSchema = Yup.object().shape({
-  name: Yup.string().required().label("Name"),
-  email: Yup.string()
-    .required("Please enter a valid email")
-    .email()
-    .label("Email"),
-  password: Yup.string()
-    .required()
-    .min(6, "Password must have at least 6 characters")
-    .label("Password"),
-  confirmPassword: Yup.string()
-    .oneOf([Yup.ref("password")], "Confirm Password must match Password")
-    .required("Confirm Password is required"),
-});
 
 const SignUpScreen = ({ navigation }) => {
-  const [passwordVisibility, setPasswordVisibility] = useState(true);
-  const [rightIcon, setRightIcon] = useState("eye");
-  const [confirmPasswordIcon, setConfirmPasswordIcon] = useState("eye");
-  const [confirmPasswordVisibility, setConfirmPasswordVisibility] = useState(
-    true
-  );
-  const [registerError, setRegisterError] = useState("");
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [name, setName] = useState();
@@ -106,35 +76,8 @@ const SignUpScreen = ({ navigation }) => {
       setLoading(false);
     }
   };
-
-  function handlePasswordVisibility() {
-    if (rightIcon === "eye") {
-      setRightIcon("eye-off");
-      setPasswordVisibility(!passwordVisibility);
-    } else if (rightIcon === "eye-off") {
-      setRightIcon("eye");
-      setPasswordVisibility(!passwordVisibility);
-    }
-  }
-
-  function handleConfirmPasswordVisibility() {
-    if (confirmPasswordIcon === "eye") {
-      setConfirmPasswordIcon("eye-off");
-      setConfirmPasswordVisibility(!confirmPasswordVisibility);
-    } else if (confirmPasswordIcon === "eye-off") {
-      setConfirmPasswordIcon("eye");
-      setConfirmPasswordVisibility(!confirmPasswordVisibility);
-    }
-  }
-  const footer = (
-    <Footer
-      title="Already have an account?"
-      action="Sign In here!"
-      onPress={() => navigation.navigate("Sign In")}
-    />
-  );
   return (
-    <Container {...{ footer }}>
+    <Container>
       <View style={{ padding: 35 }}>
         <Text
           style={{
@@ -158,76 +101,94 @@ const SignUpScreen = ({ navigation }) => {
             fontSize: 15,
           }}
         >
-          Let us know what your email, and your password
+          Let us know your email, and your password
         </Text>
-        <Form
-          initialValues={{
-            name: "",
-            email: "",
-            password: "",
-            confirmPassword: "",
-            profilePhoto: null,
-          }}
-          validationSchema={validationSchema}
-          onSubmit={(user) => signUp(user)}
-        >
-          <ProfilePhotoContainer onPress={addProfilePhoto}>
-            {profilePhoto ? (
-              <ProfilePhoto source={{ uri: profilePhoto }} />
-            ) : (
-              <DefaultProfilePhoto>
-                <AntDesign name="plus" size={24} color="#ffffff" />
-              </DefaultProfilePhoto>
-            )}
-          </ProfilePhotoContainer>
 
-          <FormField
-            name="name"
-            leftIcon="account"
-            textContentType="name"
-            placeholder="Enter name"
-            autoFocus={true}
-          />
-          <FormField
-            name="email"
-            leftIcon="email"
-            placeholder="Enter email"
-            autoCapitalize="none"
-            keyboardType="email-address"
-            textContentType="emailAddress"
-          />
-          <FormField
-            name="password"
-            leftIcon="lock"
-            placeholder="Enter password"
-            autoCapitalize="none"
-            autoCorrect={false}
-            secureTextEntry={passwordVisibility}
-            textContentType="password"
-            rightIcon={rightIcon}
-            handlePasswordVisibility={handlePasswordVisibility}
-          />
-          <FormField
-            name="confirmPassword"
-            leftIcon="lock"
-            placeholder="Confirm password"
-            autoCapitalize="none"
-            autoCorrect={false}
-            secureTextEntry={confirmPasswordVisibility}
-            textContentType="password"
-            rightIcon={confirmPasswordIcon}
-            handlePasswordVisibility={handleConfirmPasswordVisibility}
-          />
-          <FormButton title={"Register"} />
-          {<FormErrorMessage error={registerError} visible={true} />}
-        </Form>
-        {/*<IconButton
-          style={styles.backButton}
-          iconName="keyboard-backspace"
-          color={Colors.white}
-          size={30}
-          onPress={() => navigation.goBack()}
-        />*/}
+        <ProfilePhotoContainer onPress={addProfilePhoto}>
+          {profilePhoto ? (
+            <ProfilePhoto source={{ uri: profilePhoto }} />
+          ) : (
+            <DefaultProfilePhoto>
+              <AntDesign name="plus" size={24} color="#ffffff" />
+            </DefaultProfilePhoto>
+          )}
+        </ProfilePhotoContainer>
+
+        <Auth>
+          <AuthContainer>
+            <AuthTitle>Name</AuthTitle>
+            <AuthField
+              autoCapitalize="words"
+              autoCorrect={true}
+              autoFocus={true}
+              onChangeText={(name) => setName(name)}
+              value={name}
+            />
+          </AuthContainer>
+
+          <AuthContainer>
+            <AuthTitle>Email Address</AuthTitle>
+            <AuthField
+              autoCapitalize="none"
+              autoCompleteType="email"
+              autoCorrect={false}
+              // autoFocus={true}
+              keyboardType="email-address"
+              onChangeText={(email) => setEmail(email.trim())}
+              value={email}
+            />
+          </AuthContainer>
+
+          <AuthContainer>
+            <AuthTitle>Password</AuthTitle>
+            <AuthField
+              autoCapitalize="none"
+              autoCompleteType="password"
+              autoCorrect={false}
+              secureTextEntry={true}
+              onChangeText={(password) => setPassword(password.trim())}
+              textColor="#ffffff"
+              value={password}
+            />
+          </AuthContainer>
+        </Auth>
+
+        <SignUpContainer onPress={signUp} disabled={loading}>
+          {loading ? (
+            <Loading />
+          ) : (
+            <Text
+              style={{
+                color: "#ffffff",
+                textAlign: "center",
+                fontWeight: "bold",
+              }}
+            >
+              Sign Up
+            </Text>
+          )}
+        </SignUpContainer>
+
+        <SignUp onPress={() => navigation.navigate("Sign In")}>
+          <Text
+            style={{
+              color: "#ffffff",
+              textAlign: "center",
+              //fontWeight: "bold",
+            }}
+          >
+            Already have an account?{" "}
+            <Text
+              style={{
+                color: Colors.red,
+                //textAlign: "center",
+                fontWeight: "bold",
+              }}
+            >
+              Sign In
+            </Text>
+          </Text>
+        </SignUp>
       </View>
     </Container>
   );
@@ -251,6 +212,45 @@ const DefaultProfilePhoto = styled.View`
 
 const ProfilePhoto = styled.Image`
   flex: 1;
+`;
+
+const Auth = styled.View`
+  margin: 16px 32px 32px;
+`;
+const AuthContainer = styled.View`
+  margin-bottom: 32px;
+`;
+
+const AuthTitle = styled(Text)`
+  color: #fff;
+  font-size: 12px;
+  text-transform: uppercase;
+  font-weight: 300;
+`;
+
+const AuthField = styled.TextInput`
+  border-bottom-color: #fff;
+  border-bottom-width: 0.5px;
+  height: 48px;
+  color: #fff;
+`;
+
+const SignUpContainer = styled.TouchableOpacity`
+  margin: 0 32px;
+  height: 48px;
+  align-items: center;
+  justify-content: center;
+  background-color: #2163f6;
+  border-radius: 6px;
+`;
+
+const Loading = styled.ActivityIndicator.attrs((props) => ({
+  color: "#ffffff",
+  size: "small",
+}))``;
+
+const SignUp = styled.TouchableOpacity`
+  margin: 16px;
 `;
 
 export default SignUpScreen;

@@ -17,7 +17,7 @@ const height = width * aspectRatio;
 
 function propTypes(props) {
   children: propTypes.node;
-  footer: propTypes.node;
+  //footer: propTypes.node;
   name: propTypes.string;
 }
 
@@ -50,7 +50,7 @@ const Container = (props) => {
           />
           <View style={styles.ContentContainer}>{props.children}</View>
         </View>
-        <View
+        {/*<View
           style={{
             backgroundColor: Colors.black,
             paddingBottom: 30,
@@ -58,7 +58,7 @@ const Container = (props) => {
           }}
         >
           {props.footer}
-        </View>
+        </View>*/}
       </View>
     </KeyboardAwareScrollView>
   );

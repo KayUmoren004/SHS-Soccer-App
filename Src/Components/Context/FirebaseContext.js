@@ -27,7 +27,7 @@ const Firebase = {
 
       let profilePhotoUrl = "default";
 
-      await db.collection("user").doc(uid).set({
+      await db.collection("users").doc(uid).set({
         name: user.name,
         email: user.email,
         profilePhotoUrl,
@@ -82,6 +82,34 @@ const Firebase = {
       xhr.open("GET", uri, true);
       xhr.send(null);
     });
+  },
+
+  getUserInfo: async (uid) => {
+    try {
+      const user = await db.collection("users").doc(uid).get();
+
+      if (user.exists) {
+        return user.data();
+      }
+    } catch (error) {
+      console.log("Error @getUserInfo: ", error);
+    }
+  },
+
+  logOut: async () => {
+    try {
+      await firebase.auth().signOut();
+
+      return true;
+    } catch (error) {
+      console.log("Error @logOut: ", error);
+    }
+
+    return false;
+  },
+
+  signIn: async (email, password) => {
+    return firebase.auth().signInWithEmailAndPassword(email, password);
   },
 };
 

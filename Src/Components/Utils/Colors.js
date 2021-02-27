@@ -7,8 +7,8 @@ export default {
   lightGrey: "#f9f9f9",
   mediumGrey: "#6e6869",
   red: "#fc5c65",
-  inactive: "#800080",
+  inactive: "#666666",
   tint: "#fdfae4",
-  red: "#ff0000",
-  blue: "#0000ff",
+  red: "#E9446A",
+  blue: "#2163F6",
 };

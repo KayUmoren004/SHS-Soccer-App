@@ -9,9 +9,27 @@ import AuthStackScreens from "./AuthStackScreens";
 import MainStackScreens from "./MainStackScreens";
 import { UserContext } from "../Components/Context/UserContext";
 import LoadingScreen from "../Screens/AuthScreens/LoadingScreen";
+import Colors from "../Components/Utils/Colors";
 
 const AppStackScreens = () => {
   const RootStack = createStackNavigator();
+  const MainStack = createStackNavigator();
+
+  const MainStackScreen = ({ navigation }) => {
+    return (
+      <MainStack.Navigator initialRouteName="Feed">
+        <MainStack.Screen
+          name="Feed"
+          component={MainStackScreens}
+          options={{
+            headerStyle: { backgroundColor: Colors.black },
+            headerTintColor: Colors.white,
+            headerTitleStyle: { fontSize: 24, fontWeight: "bold" },
+          }}
+        />
+      </MainStack.Navigator>
+    );
+  };
   const [user] = useContext(UserContext);
   return (
     <RootStack.Navigator
@@ -23,7 +41,7 @@ const AppStackScreens = () => {
       ) : user.isLoggedIn ? (
         <RootStack.Screen
           name="App"
-          component={MainStackScreens}
+          component={MainStackScreen}
           options={{ headerShown: false }}
         />
       ) : (

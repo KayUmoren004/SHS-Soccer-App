@@ -1,55 +1,50 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { StyleSheet, TouchableOpacity, Text, View } from "react-native";
-import * as Yup from "yup";
+import styled from "styled-components";
 
 //App Component
 import Container from "../../Components/Screen Components/Container";
 
+//Context
+import { UserContext } from "../../Components/Context/UserContext";
+import { FirebaseContext } from "../../Components/Context/FirebaseContext";
+
 //dependencies
 import Colors from "../../Components/Utils/Colors";
-import Form from "../../Components/Screen Components/Forms/Form";
-import FormField from "../../Components/Screen Components/Forms/FormField";
-import FormButton from "../../Components/Screen Components/Forms/FormButton";
-import FormErrorMessage from "../../Components/Screen Components/Forms/FormErrorMessage";
-import IconButton from "../../Components/Screen Components/IconButton";
-import Footer from "../../Components/Screen Components/Footer";
-
-//Validate Email and Password
-const validationSchema = Yup.object().shape({
-  email: Yup.string()
-    .required("Please enter a registered email")
-    .email()
-    .label("Email"),
-  password: Yup.string()
-    .required()
-    .min(6, "Password must have at least 6 characters")
-    .label("Password"),
-});
 
 const SignInScreen = ({ navigation }) => {
-  const [passwordVisibility, setPasswordVisibility] = useState(true);
-  const [rightIcon, setRightIcon] = useState("eye");
-  const [loginError, setLoginError] = useState("");
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+  const [loading, setLoading] = useState(false);
+  const firebase = useContext(FirebaseContext);
+  const [_, setUser] = useContext(UserContext);
 
-  function handlePasswordVisibility() {
-    if (rightIcon === "eye") {
-      setRightIcon("eye-off");
-      setPasswordVisibility(!passwordVisibility);
-    } else if (rightIcon === "eye-off") {
-      setRightIcon("eye");
-      setPasswordVisibility(!passwordVisibility);
+  const signIn = async () => {
+    setLoading(true);
+
+    try {
+      await firebase.signIn(email, password);
+
+      const uid = firebase.getCurrentUser().uid;
+
+      const userInfo = await firebase.getUserInfo(uid);
+
+      setUser({
+        name: userInfo.name,
+        Email: userInfo.email,
+        uid,
+        profilePhotoUrl: userInfo.profilePhotoUrl,
+        isLoggedIn: true,
+      });
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
-  const footer = (
-    <Footer
-      title="Don't have an account?"
-      action="Sign Up here!"
-      onPress={() => navigation.navigate("Register")}
-    />
-  );
   return (
-    <Container {...{ footer }}>
+    <Container>
       <View style={{ padding: 36 }}>
         <Text
           style={{
@@ -75,49 +70,112 @@ const SignInScreen = ({ navigation }) => {
         >
           Use your credentials below and login to your account
         </Text>
-        <Form
-          initialValues={{ email: "", password: "" }}
-          validationSchema={validationSchema}
-          /*onSubmit={value => handleOnLogin(values)}*/
-        >
-          <FormField
-            name="email"
-            leftIcon="email"
-            placeholder="Enter email"
-            autoCapitalize="none"
-            keyboardType="email-address"
-            textContentType="emailAddress"
-            autoFocus={true}
-          />
-          <FormField
-            name="password"
-            leftIcon="lock"
-            placeholder="Enter password"
-            autoCapitalize="none"
-            autoCorrect={false}
-            secureTextEntry={passwordVisibility}
-            textContentType="password"
-            rightIcon={rightIcon}
-            handlePasswordVisibility={handlePasswordVisibility}
-          />
+        <Auth>
+          <AuthContainer>
+            <AuthTitle>Email Address</AuthTitle>
+            <AuthField
+              autoCapitalize="none"
+              autoCompleteType="email"
+              autoCorrect={false}
+              // autoFocus={true}
+              keyboardType="email-address"
+              onChangeText={(email) => setEmail(email.trim())}
+              value={email}
+            />
+          </AuthContainer>
 
-          <FormButton title={"Sign In"} />
-          {<FormErrorMessage error={loginError} visible={true} />}
-          <View style={styles.footerButtonContainer}>
-            {/* <TouchableOpacity
-              onPress={() => navigation.navigate("ForgotPassword")}
+          <AuthContainer>
+            <AuthTitle>Password</AuthTitle>
+            <AuthField
+              autoCapitalize="none"
+              autoCompleteType="password"
+              autoCorrect={false}
+              secureTextEntry={true}
+              onChangeText={(password) => setPassword(password.trim())}
+              textColor="#ffffff"
+              value={password}
+            />
+          </AuthContainer>
+        </Auth>
+
+        <SignInContainer onPress={signIn} disabled={loading}>
+          {loading ? (
+            <Loading />
+          ) : (
+            <Text
+              style={{
+                color: "#ffffff",
+                textAlign: "center",
+                fontWeight: "bold",
+              }}
             >
-              <Text style={styles.forgotPasswordButtonText}>
-                Forgot Password?
-              </Text>
-            </TouchableOpacity>*/}
-          </View>
-        </Form>
+              Sign In
+            </Text>
+          )}
+        </SignInContainer>
+
+        <SignUp onPress={() => navigation.navigate("Sign Up")}>
+          <Text
+            style={{
+              color: "#ffffff",
+              textAlign: "center",
+              //fontWeight: "bold",
+            }}
+          >
+            New to Varsity Soccer?{" "}
+            <Text
+              style={{
+                color: Colors.red,
+                //textAlign: "center",
+                fontWeight: "bold",
+              }}
+            >
+              Sign Up
+            </Text>
+          </Text>
+        </SignUp>
       </View>
     </Container>
   );
 };
 
-export default SignInScreen;
+const Auth = styled.View`
+  margin: 64px 32px 32px;
+`;
+const AuthContainer = styled.View`
+  margin-bottom: 32px;
+`;
 
-const styles = StyleSheet.create({});
+const AuthTitle = styled(Text)`
+  color: #fff;
+  font-size: 12px;
+  text-transform: uppercase;
+  font-weight: 300;
+`;
+
+const AuthField = styled.TextInput`
+  border-bottom-color: #fff;
+  border-bottom-width: 0.5px;
+  height: 48px;
+  color: #fff;
+`;
+
+const SignInContainer = styled.TouchableOpacity`
+  margin: 0 32px;
+  height: 48px;
+  align-items: center;
+  justify-content: center;
+  background-color: #e9446a;
+  border-radius: 6px;
+`;
+
+const Loading = styled.ActivityIndicator.attrs((props) => ({
+  color: "#ffffff",
+  size: "small",
+}))``;
+
+const SignUp = styled.TouchableOpacity`
+  margin: 16px;
+`;
+
+export default SignInScreen;
