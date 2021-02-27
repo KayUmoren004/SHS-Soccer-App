@@ -11,7 +11,7 @@ import Colors from "../Components/Utils/Colors";
 import FeedScreen from "../Screens/AppScreens/FeedScreen";
 import GamesScreen from "../Screens/AppScreens/GamesScreen";
 import NotificationScreen from "../Screens/AppScreens/NotificationScreen";
-import Standings from "../Screens/AppScreens/Standings";
+import StandingsScreen from "../Screens/AppScreens/StandingsScreen";
 import ProfileScreen from "../Screens/AppScreens/ProfileScreen";
 
 //Stack Navigator Header Name
@@ -96,7 +96,7 @@ const MainStackScreens = ({ navigation, route }) => {
       screenOptions={screenOptions}
     >
       <MainStack.Screen name="Games" component={GamesScreen} />
-      <MainStack.Screen name="Standings" component={Standings} />
+      <MainStack.Screen name="Standings" component={StandingsScreen} />
       <MainStack.Screen name="Feed" component={FeedScreen} />
       <MainStack.Screen name="Notifications" component={NotificationScreen} />
       <MainStack.Screen name="Profile" component={ProfileScreen} />

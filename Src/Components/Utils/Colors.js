@@ -11,4 +11,5 @@ export default {
   tint: "#fdfae4",
   red: "#E9446A",
   blue: "#2163F6",
+  logOut: "#23a8d9",
 };
