@@ -9,6 +9,7 @@ import AuthStackScreens from "./AuthStackScreens";
 import MainStackScreens from "./MainStackScreens";
 import { UserContext } from "../Components/Context/UserContext";
 import LoadingScreen from "../Screens/AuthScreens/LoadingScreen";
+import Modal from "../Screens/AppScreens/StatsScreen";
 import Colors from "../Components/Utils/Colors";
 
 const AppStackScreens = () => {
@@ -17,7 +18,20 @@ const AppStackScreens = () => {
 
   const MainStackScreen = ({ navigation }) => {
     return (
-      <MainStack.Navigator initialRouteName="Feed">
+      <MainStack.Navigator initialRouteName="Feed" mode="modal">
+        <MainStack.Screen
+          name="Stats"
+          component={Modal}
+          options={{
+            headerStyle: { backgroundColor: Colors.black },
+            headerTintColor: Colors.white,
+            headerTitleStyle: { fontSize: 24, fontWeight: "bold" },
+            title: "Team Stats",
+            animationEnabled: true,
+            
+          }}
+        />
+
         <MainStack.Screen
           name="Feed"
           component={MainStackScreens}
@@ -25,7 +39,17 @@ const AppStackScreens = () => {
             headerStyle: { backgroundColor: Colors.black },
             headerTintColor: Colors.white,
             headerTitleStyle: { fontSize: 24, fontWeight: "bold" },
-          }}
+            headerRight: () => (
+            <TouchableOpacity onPress={() => navigation.navigate("Stats")} style={{justifyContent: "center", alignContent: "center"}}>
+              <Entypo
+                name="text-document-inverted"
+                size={30}
+                color="#fff"
+                style={{ marginRight: 20, marginBottom: 10 }}
+              />
+            </TouchableOpacity>
+          ),
+        }}
         />
       </MainStack.Navigator>
     );
