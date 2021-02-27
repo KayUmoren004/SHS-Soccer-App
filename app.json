@@ -1,0 +1,12 @@
+{
+  "name": "SHS-Soccer-App",
+  "displayName": "SHS-Soccer-App",
+  "expo": {
+    "name": "SHS-Soccer-App",
+    "slug": "SHS-Soccer-App",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
