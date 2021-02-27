@@ -28,7 +28,6 @@ const AppStackScreens = () => {
             headerTitleStyle: { fontSize: 24, fontWeight: "bold" },
             title: "Team Stats",
             animationEnabled: true,
-            
           }}
         />
 
@@ -40,16 +39,19 @@ const AppStackScreens = () => {
             headerTintColor: Colors.white,
             headerTitleStyle: { fontSize: 24, fontWeight: "bold" },
             headerRight: () => (
-            <TouchableOpacity onPress={() => navigation.navigate("Stats")} style={{justifyContent: "center", alignContent: "center"}}>
-              <Entypo
-                name="text-document-inverted"
-                size={30}
-                color="#fff"
-                style={{ marginRight: 20, marginBottom: 10 }}
-              />
-            </TouchableOpacity>
-          ),
-        }}
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Stats")}
+                style={{ justifyContent: "center", alignContent: "center" }}
+              >
+                <Entypo
+                  name="text-document-inverted"
+                  size={30}
+                  color="#fff"
+                  style={{ marginRight: 20, marginBottom: 10 }}
+                />
+              </TouchableOpacity>
+            ),
+          }}
         />
       </MainStack.Navigator>
     );
