@@ -10,6 +10,8 @@ import { Divider } from "react-native-paper";
 import firebase from "firebase";
 import { UserContext } from "../../Components/Context/UserContext";
 import { FirebaseContext } from "../../Components/Context/FirebaseContext";
+import moment from "moment";
+import Colors from "../../Components/Utils/Colors";
 
 //Initialize Firebase
 if (!firebase.apps.length) {
@@ -41,39 +43,98 @@ const NotificationScreen = ({ navigation }) => {
   };
 
   const renderNotifications = ({ item }) => {
+    //console.log(...state.data);
+    moment.updateLocale("en", {
+      relativeTime: {
+        future: "in %s",
+        past: "%s ",
+        s: "sec",
+        m: "%dm",
+        mm: "%dm",
+        h: "%dh",
+        hh: "%dh",
+        d: "%dd",
+        dd: "%dd",
+        M: "a mth",
+        MM: "%dmths",
+        y: "y",
+        yy: "%dy",
+      },
+      calendar: {
+        lastDay: "[Yesterday]",
+        sameDay: "[Today]",
+        nextDay: "[Tomorrow]",
+        lastWeek: "[Last] dddd",
+        nextWeek: "[Next] dddd",
+        sameElse: "L",
+      },
+    });
     return (
-      <View>
-        <View>
-          <Text>{item.day}</Text>
+      <View style={styles.FlatListContainer}>
+        <View style={styles.DayContainer}>
+          <Text style={styles.DayText}>
+            {moment.unix(item.day.seconds).calendar()}
+          </Text>
         </View>
-        <View>
-          <Text>{item.title}</Text>
-          <Text>{item.body}</Text>
-          <Text>{item.time}</Text>
+        <View style={styles.BodyContainer}>
+          <View>
+            <Text style={styles.TitleText}>{item.title}</Text>
+          </View>
+          <View style={styles.SubBody}>
+            <Text style={styles.BodyText}>{item.body} </Text>
+            <View style={styles.TimeContainer}>
+              <Text style={styles.TimeText}>
+                {moment.unix(item.timestamp.seconds).fromNow()}
+              </Text>
+            </View>
+          </View>
         </View>
+        <Divider style={{ backgroundColor: Colors.inactive }} />
       </View>
     );
   };
 
   return (
-    <SafeAreaView
-      style={{ flex: 1, backgroundColor: "#000", alignContent: "center" }}
-    >
-      <Container>
-        <FlatList
-          data={state.data}
-          renderItem={renderNotifications}
-          keyExtractor={(item) => item.id}
-        />
-      </Container>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.darkBlack }}>
+      <FlatList
+        data={state.data}
+        renderItem={renderNotifications}
+        keyExtractor={(item) => item.id}
+      />
     </SafeAreaView>
   );
 };
 
-const Container = styled.View`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-`;
+const styles = StyleSheet.create({
+  FlatListContainer: {
+    backgroundColor: Colors.darkBlack,
+    padding: 10,
+  },
+  DayContainer: {},
+  BodyContainer: {},
+  SubBody: {
+    flexDirection: "row",
+  },
+  TimeContainer: {
+    color: Colors.lightGrey,
+  },
+  DayText: {
+    color: Colors.lightGrey,
+    fontWeight: "bold",
+    fontSize: 20,
+    paddingBottom: 10,
+  },
+  TitleText: {
+    color: Colors.lightGrey,
+    paddingBottom: 5,
+    fontWeight: "bold",
+  },
+  BodyText: {
+    color: Colors.lightGrey,
+  },
+  TimeText: {
+    color: Colors.mediumGrey,
+  },
+});
 
 export default NotificationScreen;
