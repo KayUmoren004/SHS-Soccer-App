@@ -71,11 +71,11 @@ const NotificationScreen = ({ navigation }) => {
     });
     return (
       <View style={styles.FlatListContainer}>
-        <View style={styles.DayContainer}>
+        {/*<View style={styles.DayContainer}>
           <Text style={styles.DayText}>
             {moment.unix(item.day.seconds).calendar()}
           </Text>
-        </View>
+        </View>*/}
         <View style={styles.BodyContainer}>
           <View>
             <Text style={styles.TitleText}>{item.title}</Text>
@@ -89,7 +89,9 @@ const NotificationScreen = ({ navigation }) => {
             </View>
           </View>
         </View>
-        <Divider style={{ backgroundColor: Colors.inactive }} />
+        <Divider
+          style={{ backgroundColor: Colors.inactive, marginVertical: 10 }}
+        />
       </View>
     );
   };
