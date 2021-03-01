@@ -24,7 +24,7 @@ const OnBoarding = ({ navigation }) => {
   return (
     <View style={styles.Container}>
       <ImageBackground
-        source={require("../../../Assets/onBoardingMainAlt3.png")}
+        source={require("../../../Assets/onBoardingMainAlt4.png")}
         style={styles.image}
         resizeMode="repeat"
         //resizeMethod="resize"
