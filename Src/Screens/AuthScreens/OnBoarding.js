@@ -26,7 +26,7 @@ const OnBoarding = ({ navigation }) => {
       <ImageBackground
         source={require("../../../Assets/onBoardingMainAlt3.png")}
         style={styles.image}
-        resizeMode="cover"
+        resizeMode="repeat"
         //resizeMethod="resize"
       >
         <SafeAreaView style={styles.Container}>
