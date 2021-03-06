@@ -14,7 +14,7 @@ import moment from "moment";
 import * as Permissions from "expo-permissions";
 import * as Notifications from "expo-notifications";
 import Colors from "../../Components/Utils/Colors";
-import Constants from "expo-constants";
+//import Constants from "expo-constants";
 
 //Initialize Firebase
 if (!firebase.apps.length) {

@@ -26,7 +26,7 @@ const db = firebase.firestore();
 
 const ProfileScreen = () => {
   const [user, setUser] = useContext(UserContext);
-  const firebase = useContext(FirebaseContext);
+  const firebaseCTX = useContext(FirebaseContext);
   const [stats, setStats] = useState([]);
 
   useEffect(() => {
@@ -118,7 +118,7 @@ const ProfileScreen = () => {
 
   const logOut = async () => {
     // const stats = useStats()
-    const loggedOut = await firebase.logOut();
+    const loggedOut = await firebaseCTX.logOut();
 
     if (loggedOut) {
       setUser((state) => ({ ...state, isLoggedIn: false }));
