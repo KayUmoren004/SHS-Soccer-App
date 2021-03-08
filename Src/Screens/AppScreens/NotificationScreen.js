@@ -121,13 +121,17 @@ const NotificationScreen = ({ navigation }) => {
         </View>*/}
         <View style={styles.BodyContainer}>
           <View>
-            <Text style={styles.TitleText}>{item.title}</Text>
+            <Text style={styles.TitleText}>{item.flair}</Text>
           </View>
           <View style={styles.SubBody}>
-            <Text style={styles.BodyText}>{item.body} </Text>
+            <Text style={styles.BodyText}>{item.message} </Text>
             <View style={styles.TimeContainer}>
+              <Text>By:</Text>
               <Text style={styles.TimeText}>
-                {moment.unix(item.timestamp.seconds).fromNow()}
+                {moment(item.date).format("LL")}
+              </Text>
+              <Text style={styles.TimeText}>
+                {moment(item.time).format("LT")}
               </Text>
             </View>
           </View>
@@ -161,7 +165,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   TimeContainer: {
-    color: Colors.lightGrey,
+    //position: "relative",
+    //right: 0,
+    //color: Colors.lightGrey,
+    //justifyContent: "flex-end",
+    //alignItems: "flex-end",
   },
   DayText: {
     color: Colors.lightGrey,
@@ -179,6 +187,7 @@ const styles = StyleSheet.create({
   },
   TimeText: {
     color: Colors.mediumGrey,
+    textAlign: "right",
   },
 });
 
